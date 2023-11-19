@@ -1,0 +1,58 @@
+.upload-image {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .upload-image__avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  
+  .upload-image__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-left: auto;
+    align-items: flex-end;
+  }
+  
+  .upload-image__label-button {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 0.9rem;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+  }
+  
+  .upload-image__input {
+    display: none;
+  }
+  
+  .upload-image__reset-button {
+    color: #007bff;
+  }
+  
+  .upload-image__message {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+
+
+  .upload-image {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 0.357rem;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }

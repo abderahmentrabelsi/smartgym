@@ -1,0 +1,13 @@
+bind = "0.0.0.0:8000"
+loglevel = "info"
+errorlog = "-"
+accesslog = "-"
+worker_tmp_dir = "/dev/shm"
+graceful_timeout = 120
+timeout = 0
+keepalive = 60
+threads = 32
+workers = 4
+preload_app = False
+max_requests = 100
+reload = True

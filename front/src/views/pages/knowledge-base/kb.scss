@@ -1,0 +1,34 @@
+#knowledge-base-question .loader {
+  transform: translate(-50%) !important;
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  bottom: 0;
+  width: 100%;
+  transition: right 0.3s;
+  z-index: 1030;
+  overflow-y: auto;
+
+}
+
+body.mobile-sidebar-open .mobile-sidebar {
+  right: 0;
+}
+
+.toggle-sidebar-btn {
+  display: none;
+  position: fixed;
+  bottom: 50%;
+  right: -1rem;
+  z-index: 1040;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .toggle-sidebar-btn {
+    display: block;
+  }
+}

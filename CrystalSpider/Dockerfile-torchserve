@@ -1,0 +1,47 @@
+FROM python:3.11-slim AS setup
+
+ENV PYTHONUNBUFFERED 1
+
+RUN groupadd -r app && useradd --no-log-init -d /app -r -g app app
+
+RUN apt-get update
+RUN apt-get install --no-install-recommends -y gcc g++ git cmake make default-jre
+RUN pip install --no-cache-dir --upgrade pip wheel setuptools
+
+
+FROM setup AS download
+
+WORKDIR /tmp/torchserve
+
+RUN CXX=$(which gcc) pip install --no-cache-dir --upgrade sentence_transformers
+
+COPY ./torchserve/download_models.py .
+
+RUN python download_models.py
+
+
+FROM download AS compress
+
+COPY ./torchserve/handler.py .
+
+RUN pip install --no-cache-dir --upgrade torch-model-archiver
+
+RUN mkdir -p model_store
+RUN touch UNUSED
+RUN torch-model-archiver --model-name retrieve_and_rank --version 1.0 --serialized-file UNUSED --handler handler.py --extra-files ./models/ --export-path model_store -f
+
+
+FROM compress AS app
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --upgrade torchserve
+RUN mkdir -p model_store
+RUN mv /tmp/torchserve/model_store/*.mar model_store/
+RUN rm -rf /tmp/torchserve
+
+COPY ./torchserve/config.properties .
+
+EXPOSE 8080
+
+ENTRYPOINT ["torchserve", "--start", "--model-store", "model_store", "--models", "retrieve_and_rank=retrieve_and_rank.mar", "--ts-config", "config.properties", "--foreground"]

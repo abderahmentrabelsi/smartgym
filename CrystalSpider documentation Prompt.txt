@@ -1,0 +1,60 @@
+You are a software engineer, writing a documentation for non technical people. 
+The output is markdown code. You will start by explaining the concept; and the reasoning behind it.
+Go into detail on why this is cutting edge technology. Underline that it is not a simple ChatGPT integration, and explain why is it better. 
+Please do not just rephrase what I told you, but include all of the information I provided. Expand and detail it. If you need any context or are lacking information, ask for it. Please provide a lot more detail. Also analyse them, and argue the choices. You can freely edit the order of the ideas. Include emojis, following the gitmoji convention. I will leave you instructions of what to explain between chevrons. For instance, when you find <explain Faiss index>, you will include an explanation for the Faiss Index. 
+___________________ 
+
+I - introduction: 
+
+The need: The overall goal is to create a contextual search engine, that understands natural language. 
+The engine name is CrystalSpider. 
+This engine is destined for documents, and in this case is specializing in medical articles. 
+This search engine is capable of crawling, indexing, classifying documents from both PubMed, SharePoint, and is extensible to any other data source. 
+The idea of the whole project is that when a user search for scientific papers on a search engine, the matching of those papers or articles is made through a series of Boolean condition regarding the keywords used. This method relies on the presupposition that the keywords used for the article can represent to an efficient degree, the informative content of the paper itself. This presupposition may seem trivial, but it defines the search for a paper into a linguistical match. Specifically for scientific papers, this isn’t enough. Therefore, the project has the goal of developing a scoring method for abstracts and texts based on the assessment of similarity between them and the proposed query.
+
+II- Component breakdown. 
+1) CrystalTorch: A TorchServe self hosted node, that's running the ML models. <explain TorchServe>
+It is running two models; paraphrase-distilroberta-base-v1 which serves as a bi-encoder, and cross-encoder/ms-marco-MiniLM-L-6-v2 which serves as a cross encoder. It exposes 3 API methods: Get paragraph embeddings, Score Paragraphs against a query, Rank a paragraph against a query. 
+<explain a bi-encoder> 
+<explain a cross encoder> 
+It uses a retrieve and rerank strategy. Bi-Encoder to retrieve relevant documents and CrossEncoder to score and refine. 
+<explain the retrieve and rerank stragegy>
+
+2) CrystalSpider Core. 
+This is the backbone of the application. Is responsible for indexing and querying the documents in the database and PMC. It works in conjunction with a CrystalTorch to generate embeddings and score text against a query. 
+It is developed in FastAPI, backed by MongoDB and extensive usage of Redis. 
+Does two main functions: 
+a) how paper search: 
+- QUERY INITIALIZATION: The user inserts the query.
+- QUERY CORRECTION: After user inserts the query spelling and grammatical mistakes should be corrected with BioMed's API 
+- FETCHING PROCESS: From the query, a list of 20 papers from Pubmed is extracted through the BioEntrez library. They are then sent to CrystalTorch for analysis through the score_paragraphs method.
+- ABSTRACT ANALYSIS: The abstract of every fetched paper is analyzed through Expert.ai, extracting all the relevant information: keywords and lemmas. 
+- SCORING PROCESS: Confronting the two previously generated dictionaries, a score is associated to every paper which is the sum of the relevance scores of every shared element between the text of the abstract and the query. 
+- MEAN SCORE: A final score is generated which is the average between the ‘contextual’ score and the score associated with the fetching position (rescaled between 0-100 with min-max method). 
+- TITLE PRINTING: The papers are presented ordered by the final mean score associated with the paper. 
+- ANALYSING FULL CONTENT: When the primary operations continue, in the background papers will analyzed. We fetch their full text with Grobid, a PDF to Text engine, then use CrystalTorch and ExpertAI to analyze the score of each paragraph against the query. We then find the main sentences via ExpertAI. 
+
+b) connected articles works: 
+The Faiss Index is kept in memory and persisted to the disk. 
+<explain Faiss Index>
+On each search, the embeddings are generated and inserted into the index. 
+<explain text embeddings>
+The Faiss Index is using an angular distance metric. 
+<explain angular distance>
+It is being used to perform an Approximate Nearest Search with the given vector. 
+<explain ANN>
+A distance cutoff was established at 5. 
+
+3) CrystalGPT 
+It is a chatbot powered by cutting edge technology. It's competitive advantage is that it responds factually and doesn't invent facts. 
+It has 3 sub components: 
+- GPT-3: LLM, provided by the OpenAI API.
+<explain the difference between GPT and ChatGPT>
+- LlamaIndex: a "bridge" between LLMs and external data. In this context, external data is our articles. Our articles are parsed into "Nodes". We essentially build a tree index over the set of candidate nodes, with a summary prompt seeded with the query. The tree is built in a bottoms-up fashion, and in the end the root node is returned as the response. LlamaIndex offers composability of our indices, meaning that we can build indices on top of other indices. This allows us to more effectively index your entire document tree in order to feed custom knowledge to GPT.
+- LangChain: a framework for developing applications powered by language models. Question answering involves fetching multiple documents, and then asking a question of them. The LLM response will contain the answer to your question, based on the content of the documents.
+
+III- Conclusion 
+Explain the shortcomings, and that they are conscious decisions made to reduce costs. 
+
+_________
+Remember to explain all the concepts. Use your knowledge to explain everything. Assume the reader knows nothing. Reformat the ideas to your liking, but keep all the information. Do output the same text I gave you. Expand and detail all the concepts. 

@@ -1,0 +1,46 @@
+### Rank paragraphs
+POST http://localhost:8080/predictions/retrieve_and_rank
+Content-Type: application/json
+
+{
+  "method": "rank_paragraphs",
+  "input": {
+    "query": "What is the best way to learn machine learning?",
+    "paragraphs": [
+      "Machine learning is a field of computer science that involves teaching computers to learn from data.",
+      "The best way to learn machine learning is through online courses, books, and practice.",
+      "Machine learning involves creating algorithms that can adapt and improve over time."
+    ]
+  }
+}
+
+### Generate embeddings
+POST http://localhost:8080/predictions/retrieve_and_rank
+Content-Type: application/json
+
+{
+  "method": "generate_embeddings",
+  "input": {
+    "paragraphs": [
+      "Machine learning is a field of computer science that involves teaching computers to learn from data.",
+      "The best way to learn machine learning is through online courses, books, and practice.",
+      "Machine learning involves creating algorithms that can adapt and improve over time."
+    ]
+  }
+}
+
+### Score paragraphs
+POST http://localhost:8080/predictions/retrieve_and_rank
+Content-Type: application/json
+
+{
+  "method": "score_paragraphs",
+  "input": {
+    "query": "What is the best way to learn machine learning?",
+    "paragraphs": [
+      "Machine learning is a field of computer science that involves teaching computers to learn from data.",
+      "The best way to learn machine learning is through online courses, books, and practice.",
+      "Machine learning involves creating algorithms that can adapt and improve over time."
+    ]
+  }
+}

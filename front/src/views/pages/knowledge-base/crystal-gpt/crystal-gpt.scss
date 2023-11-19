@@ -1,0 +1,54 @@
+@import '@styles/core.scss';
+
+.react-chatbot-kit-chat-container {
+  width: unset !important;
+  border-radius: 0.6rem !important;
+  margin-bottom: 2rem !important;
+  box-shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1);
+  background: #ffffff !important;
+}
+
+.react-chatbot-kit-chat-message-container {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: transparent !important;
+}
+
+.react-chatbot-kit-chat-bot-message {
+  margin-left: unset !important;
+  width: 70% !important;
+}
+
+.react-chatbot-kit-chat-inner-container {
+  background: transparent !important;
+}
+
+.react-chatbot-kit-chat-header {
+  font-size: 1.285rem;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02rem;
+  background-color: unset !important;
+  color: #5e5873 !important;
+  line-height: 1.2;
+  padding: 1.5rem;
+}
+
+.react-chatbot-kit-chat-input {
+  @extend .form-control;
+}
+
+.dark-layout {
+  .react-chatbot-kit-chat-container,
+  .react-chatbot-kit-chat-header,
+  .react-chatbot-kit-chat-input,
+  .react-chatbot-kit-chat-container,
+  .react-chatbot-kit-chat-message-container {
+    background: #283046 !important;
+  }
+
+  .react-chatbot-kit-chat-header {
+    color: #d0d2d6 !important;
+  }
+}
+
